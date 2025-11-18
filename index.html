@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Akash Karmakar - Personal Portfolio</title>
+    
+    <!-- Google Fonts for modern typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" xintegrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <style>
+        /* --- CSS STYLES --- */
+
+        /* 1. Reset and Global Styles */
+        :root {
+            --primary-color: #007bff;
+            --secondary-color: #6c757d;
+            --background-color: #ffffff;
+            --text-color: #212529;
+            --card-bg: #f8f9fa;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            --border-radius: 16px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            overflow-x: hidden; /* Prevents horizontal scroll */
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        h1, h2, h3 {
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 20px;
+        }
+
+        h1 { font-size: 3rem; }
+        h2 { font-size: 2.5rem; color: var(--primary-color); }
+        h3 { font-size: 1.5rem; }
+
+        section {
+            padding: 100px 0;
+        }
+        
+        /* 2. Header and Navigation */
+        .header {
+            position: fixed;
+            width: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 15px 0;
+            transition: all 0.3s ease;
+        }
+        
+        .header.scrolled {
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            text-decoration: none;
+            color: var(--text-color);
+        }
+        .logo span {
+            color: var(--primary-color);
+        }
+
+        .nav-links {
+            list-style: none;
+            display: flex;
+        }
+
+        .nav-links li {
+            margin-left: 30px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-color);
+            font-weight: 600;
+            position: relative;
+            padding-bottom: 5px;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #8E2DE2, #4A00E0);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* 3. Hero Section */
+        #hero {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            text-align: center;
+        }
+        
+        #hero .container {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-content .subtitle {
+            font-size: 1.5rem;
+            font-weight: 400;
+            color: var(--secondary-color);
+        }
+
+        .hero-content h1 {
+            background: linear-gradient(90deg, #8E2DE2, #4A00E0, #007BFF);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-fill-color: transparent;
+            margin: 10px 0 20px;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(90deg, #8E2DE2, #4A00E0);
+            color: white;
+            padding: 15px 35px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 20px rgba(74, 0, 224, 0.3);
+            margin-top: 20px;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 25px rgba(74, 0, 224, 0.4);
+        }
+        
+        /* Background Animated Blobs */
+        .blob-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.6;
+        }
+        .blob1 {
+            width: 400px;
+            height: 400px;
+            background: #ff9a9e;
+            top: 10vh;
+            left: 10vw;
+            animation: moveBlob1 15s infinite alternate;
+        }
+        .blob2 {
+            width: 300px;
+            height: 300px;
+            background: #fad0c4;
+            bottom: 20vh;
+            right: 15vw;
+            animation: moveBlob2 18s infinite alternate;
+        }
+        .blob3 {
+            width: 250px;
+            height: 250px;
+            background: #a1c4fd;
+            bottom: 5vh;
+            left: 25vw;
+            animation: moveBlob3 12s infinite alternate;
+        }
+
+        @keyframes moveBlob1 {
+            from { transform: translate(0, 0) scale(1); }
+            to { transform: translate(50px, 100px) scale(1.2); }
+        }
+        @keyframes moveBlob2 {
+            from { transform: translate(0, 0) scale(1); }
+            to { transform: translate(-80px, -50px) scale(0.8); }
+        }
+        @keyframes moveBlob3 {
+            from { transform: translate(0, 0) scale(1); }
+            to { transform: translate(60px, -90px) scale(1.1); }
+        }
+
+        /* 4. About Section */
+        #about p {
+            font-size: 1.1rem;
+            max-width: 800px;
+            margin: 0 auto 30px auto;
+            text-align: center;
+        }
+
+        /* 5. Skills Section */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .skill-card {
+            background: var(--background-color);
+            padding: 30px;
+            border-radius: var(--border-radius);
+            text-align: center;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+            border: 1px solid #eee;
+        }
+
+        .skill-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+
+        .skill-card .icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+
+        /* Skill-specific colors */
+        .skill-card:nth-child(1) .icon { color: #ff6b6b; }
+        .skill-card:nth-child(2) .icon { color: #48dbfb; }
+        .skill-card:nth-child(3) .icon { color: #1dd1a1; }
+        .skill-card:nth-child(4) .icon { color: #feca57; }
+        .skill-card:nth-child(5) .icon { color: #5f27cd; }
+        .skill-card:nth-child(6) .icon { color: #ff9f43; }
+
+        /* 6. Connect Section */
+        #connect {
+            text-align: center;
+        }
+
+        .social-links {
+            margin-top: 30px;
+            margin-bottom: 30px;
+        }
+
+        .social-links a {
+            color: var(--text-color);
+            font-size: 2rem;
+            margin: 0 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .social-links a:hover {
+            transform: scale(1.2);
+        }
+        .social-links .fa-facebook:hover { color: #1877F2; }
+        .social-links .fa-instagram:hover { color: #E4405F; }
+        .social-links .fa-twitter:hover { color: #1DA1F2; }
+
+
+        .email-link {
+            display: inline-block;
+            margin-top: 20px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--secondary-color);
+            text-decoration: none;
+            position: relative;
+            padding: 10px 20px;
+            border: 2px solid #ddd;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+        }
+
+        .email-link:hover {
+            color: var(--primary-color);
+            border-color: var(--primary-color);
+            background: #f0f8ff;
+        }
+
+        /* 7. Footer */
+        footer {
+            text-align: center;
+            padding: 20px;
+            background: var(--card-bg);
+            border-top: 1px solid #eee;
+        }
+
+        /* 8. Animations on Scroll */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* 9. Responsive Design */
+        @media (max-width: 768px) {
+            h1 { font-size: 2.5rem; }
+            h2 { font-size: 2rem; }
+            
+            .nav-links {
+                display: none; /* Simple hiding for mobile, could be a toggle menu */
+            }
+
+            section {
+                padding: 60px 0;
+            }
+
+            .skills-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header & Navigation -->
+    <header class="header" id="header">
+        <div class="container navbar">
+            <a href="#" class="logo">Akash<span>.</span></a>
+            <ul class="nav-links">
+                <li><a href="#hero">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#skills">Skills</a></li>
+                <li><a href="#connect">Connect</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="hero">
+        <div class="blob-container">
+            <div class="blob blob1"></div>
+            <div class="blob blob2"></div>
+            <div class="blob blob3"></div>
+        </div>
+        <div class="container">
+            <div class="hero-content">
+                <p class="subtitle fade-in">Hey, I'm Akash Karmakar.</p>
+                <h1 class="fade-in" style="transition-delay: 0.1s;">A Student of Commerce & a Future Finance Innovator.</h1>
+                <p class="subtitle fade-in" style="transition-delay: 0.2s;">Exploring the intersection of technology and finance.</p>
+                <a href="#connect" class="cta-button fade-in" style="transition-delay: 0.3s;">Get in Touch</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about">
+        <div class="container">
+            <h2 class="fade-in">About Me</h2>
+            <p class="fade-in" style="transition-delay: 0.1s;">
+                As a B.Com Honors student, I'm not just learning the books; I'm driven by a deep curiosity for the engines that power our economy. My goal is to forge a career in the banking and finance industry, but with a modern twist. I see a future where technology and artificial intelligence aren't just tools, but core drivers of financial innovation, strategy, and accessibility. I'm passionate about dissecting market trends, mastering financial instruments, and exploring how data can predict the future of commerce. I'm on a mission to be part of the next generation of financial leaders who build smarter, more efficient, and more inclusive financial systems.
+            </p>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="skills" style="background-color: var(--card-bg);">
+        <div class="container">
+            <h2 style="text-align: center;" class="fade-in">My Toolkit</h2>
+            <div class="skills-grid">
+                <!-- Skill 1 -->
+                <div class="skill-card fade-in" style="transition-delay: 0.1s;">
+                    <i class="fas fa-robot icon"></i>
+                    <h3>Internet & AI Savvy</h3>
+                    <p>Navigating the digital world and leveraging AI tools isn't just a skill, it's my second nature.</p>
+                </div>
+                <!-- Skill 2 -->
+                <div class="skill-card fade-in" style="transition-delay: 0.2s;">
+                    <i class="fas fa-lightbulb icon"></i>
+                    <h3>Tech Geek</h3>
+                    <p>From the latest gadgets to software breakthroughs, I have a genuine passion for all things tech.</p>
+                </div>
+                <!-- Skill 3 -->
+                <div class="skill-card fade-in" style="transition-delay: 0.3s;">
+                    <i class="fas fa-rocket icon"></i>
+                    <h3>Quick Learner</h3>
+                    <p>New concepts, software, or challenges? I thrive on learning quickly and adapting on the fly.</p>
+                </div>
+                <!-- Skill 4 -->
+                <div class="skill-card fade-in" style="transition-delay: 0.4s;">
+                    <i class="fas fa-file-excel icon"></i>
+                    <h3>Tally & Excel Pro</h3>
+                    <p>I can make spreadsheets and ledgers do the heavy lifting, turning data into clear insights.</p>
+                </div>
+                <!-- Skill 5 -->
+                <div class="skill-card fade-in" style="transition-delay: 0.5s;">
+                    <i class="fas fa-briefcase icon"></i>
+                    <h3>Office Veteran</h3>
+                    <p>A power user of the entire Microsoft Office suite to maximize productivity and presentation.</p>
+                </div>
+                <!-- Skill 6 -->
+                <div class="skill-card fade-in" style="transition-delay: 0.6s;">
+                    <i class="fas fa-language icon"></i>
+                    <h3>Multilingual</h3>
+                    <p>Fluent in English, Hindi, and Bengali, allowing for clear and effective communication.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Connect Section -->
+    <section id="connect">
+        <div class="container">
+            <h2 class="fade-in">Let's Connect!</h2>
+            <p class="fade-in" style="transition-delay: 0.1s;">Find me on the web, or drop me an email.</p>
+            <div class="social-links fade-in" style="transition-delay: 0.2s;">
+                <a href="https://facebook.com/akashokarmakar" target="_blank" title="Facebook"><i class="fab fa-facebook"></i></a>
+                <a href="https://instagram.com/akashokarmakar" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
+                <a href="https://twitter.com/akash_2049" target="_blank" title="X (Twitter)"><i class="fab fa-twitter"></i></a>
+            </div>
+            <a href="mailto:akash_karmakar@outlook.com" class="email-link fade-in" style="transition-delay: 0.3s;">
+                akash_karmakar@outlook.com
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; <span id="current-year"></span> Akash Karmakar. Crafted with passion.</p>
+        </div>
+    </footer>
+
+
+    <script>
+        // --- JAVASCRIPT LOGIC ---
+
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            // 1. Header scroll effect
+            const header = document.getElementById('header');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 50) {
+                    header.classList.add('scrolled');
+                } else {
+                    header.classList.remove('scrolled');
+                }
+            });
+
+            // 2. Fade-in on scroll animation
+            const faders = document.querySelectorAll('.fade-in');
+            const appearOptions = {
+                threshold: 0.2, // item is 20% visible
+                rootMargin: "0px 0px -50px 0px" // trigger a little early
+            };
+
+            const appearOnScroll = new IntersectionObserver(function(entries, appearOnScroll) {
+                entries.forEach(entry => {
+                    if (!entry.isIntersecting) {
+                        return;
+                    } else {
+                        entry.target.classList.add('visible');
+                        appearOnScroll.unobserve(entry.target);
+                    }
+                });
+            }, appearOptions);
+
+            faders.forEach(fader => {
+                appearOnScroll.observe(fader);
+            });
+            
+            // 3. Set current year in footer
+            const yearSpan = document.getElementById('current-year');
+            yearSpan.textContent = new Date().getFullYear();
+
+        });
+    </script>
+
+</body>
+</html>
