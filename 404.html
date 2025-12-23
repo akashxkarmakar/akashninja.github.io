@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 - Page Not Found</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@48,300,0,0" />
+    
+    <style>
+        :root {
+            --g-blue: #4285F4;
+            --g-red: #EA4335;
+            --g-yellow: #FBBC04;
+            --g-green: #34A853;
+            --text-main: #202124;
+            --ease-elastic: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: #ffffff;
+            color: var(--text-main);
+            overflow: hidden;
+            background-image: radial-gradient(#e5e7eb 1.5px, transparent 1.5px);
+            background-size: 40px 40px;
+        }
+
+        .serif-font { font-family: 'Playfair Display', serif; }
+
+        /* --- Liquid Background Blobs --- */
+        .blob {
+            position: absolute;
+            filter: blur(80px);
+            z-index: 0;
+            opacity: 0.35;
+            animation: float 20s infinite alternate cubic-bezier(0.45, 0.05, 0.55, 0.95);
+        }
+
+        .blob-1 { top: -10%; left: -5%; width: 50vw; height: 50vw; background: var(--g-blue); border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%; }
+        .blob-2 { bottom: -10%; right: -5%; width: 45vw; height: 45vw; background: var(--g-red); border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; animation-delay: -5s; }
+        .blob-3 { top: 20%; right: 15%; width: 30vw; height: 30vw; background: var(--g-yellow); border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; animation-duration: 25s; mix-blend-mode: multiply; }
+        .blob-4 { bottom: 10%; left: 10%; width: 25vw; height: 25vw; background: var(--g-green); border-radius: 50%; animation-duration: 30s; mix-blend-mode: multiply; }
+
+        @keyframes float {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(30px, 30px) scale(1.05); }
+        }
+
+        /* --- Glass Card --- */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(40px);
+            -webkit-backdrop-filter: blur(40px);
+            border: 1px solid rgba(255, 255, 255, 1);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.05);
+        }
+
+        /* --- Refined Buttons --- */
+        .btn-refined {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s var(--ease-smooth);
+            z-index: 1;
+        }
+        
+        .btn-refined::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 0%; height: 100%;
+            z-index: -1;
+            transition: width 0.3s var(--ease-smooth);
+        }
+
+        .btn-refined:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px -5px rgba(0,0,0,0.1);
+        }
+        
+        .btn-refined:active {
+            transform: translateY(0);
+        }
+
+        /* Primary Button Style */
+        .btn-primary {
+            background-color: #1a1a1a;
+            color: white;
+        }
+        .btn-primary::before { background-color: #4285F4; }
+        .btn-primary:hover::before { width: 100%; }
+
+        /* Secondary Button Style */
+        .btn-secondary {
+            background-color: white;
+            color: #4b5563;
+            border: 1px solid #e5e7eb;
+        }
+        .btn-secondary:hover {
+            border-color: #d1d5db;
+            color: #1f2937;
+            background-color: #f9fafb;
+        }
+
+        /* Game Trigger Button */
+        .btn-game {
+            background: rgba(255, 255, 255, 0.5);
+            border: 1px solid rgba(0,0,0,0.05);
+            backdrop-filter: blur(4px);
+            color: #6b7280;
+            transition: all 0.3s ease;
+        }
+        .btn-game:hover {
+            background: white;
+            color: var(--g-blue);
+            box-shadow: 0 4px 12px rgba(66, 133, 244, 0.15);
+            transform: scale(1.02);
+        }
+
+        /* --- Eye Animation --- */
+        .eye-container {
+            display: inline-flex;
+            position: relative;
+            width: 0.65em;
+            height: 0.65em;
+            background: white;
+            border-radius: 50%;
+            vertical-align: middle;
+            margin: 0 6px 14px 6px;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
+            border: 1px solid rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .eye-iris {
+            position: absolute;
+            top: 50%; left: 50%;
+            width: 100%; height: 100%;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            background: conic-gradient(from 0deg, var(--g-blue), var(--g-red), var(--g-yellow), var(--g-green), var(--g-blue));
+            -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #fff calc(100% - 3px));
+            mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #fff calc(100% - 3px));
+        }
+        .eye-pupil {
+            position: absolute;
+            top: 50%; left: 50%;
+            width: 40%; height: 40%;
+            background: #1f2937;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        /* --- Game Styles (Simon Says) --- */
+        #game-overlay {
+            position: fixed; inset: 0;
+            background: rgba(255,255,255,0.95);
+            z-index: 100;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            opacity: 0; pointer-events: none;
+            transition: opacity 0.4s ease;
+        }
+        #game-overlay.active { opacity: 1; pointer-events: auto; }
+
+        .simon-board {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            padding: 12px;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 20px 60px -10px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        .simon-btn {
+            width: 120px; height: 120px;
+            border-radius: 20px;
+            opacity: 0.3;
+            cursor: pointer;
+            transition: all 0.1s;
+            border: 2px solid transparent;
+        }
+        .simon-btn.active, .simon-btn:active { opacity: 1; transform: scale(0.95); }
+        
+        .simon-blue { background: var(--g-blue); border-top-left-radius: 100%; }
+        .simon-red { background: var(--g-red); border-top-right-radius: 100%; }
+        .simon-yellow { background: var(--g-yellow); border-bottom-left-radius: 100%; }
+        .simon-green { background: var(--g-green); border-bottom-right-radius: 100%; }
+
+        .game-center {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80px; height: 80px;
+            background: white;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            z-index: 10;
+        }
+
+    </style>
+</head>
+<body class="h-screen w-full flex items-center justify-center relative selection:bg-blue-100 selection:text-blue-900">
+
+    <!-- Background Blobs -->
+    <div class="blob blob-1" id="blob1"></div>
+    <div class="blob blob-2" id="blob2"></div>
+    <div class="blob blob-3" id="blob3"></div>
+    <div class="blob blob-4" id="blob4"></div>
+
+    <!-- Main Content -->
+    <main class="glass-card relative z-10 p-12 md:p-16 rounded-[2.5rem] max-w-2xl w-[90%] text-center flex flex-col items-center gap-8 shadow-2xl">
+        
+        <!-- Elegant 404 Header -->
+        <h1 class="serif-font text-[9rem] sm:text-[11rem] leading-none select-none flex items-center justify-center text-gray-900 tracking-tight opacity-90">
+            <span class="italic font-light">4</span>
+            <div class="eye-container">
+                <div class="eye-iris"></div>
+                <div class="eye-pupil" id="pupil"></div>
+            </div>
+            <span class="italic font-light">4</span>
+        </h1>
+
+        <!-- Subtext -->
+        <div class="space-y-3 -mt-4">
+            <h2 class="text-2xl font-medium text-gray-800 tracking-wide">
+                Destination Unknown
+            </h2>
+            <p class="text-gray-500 font-light text-lg leading-relaxed max-w-md mx-auto">
+                The page you are looking for has been moved, deleted, or never existed in this dimension.
+            </p>
+        </div>
+
+        <!-- Refined Action Buttons -->
+        <div class="flex flex-col sm:flex-row gap-5 mt-6 w-full sm:w-auto">
+            <a href="https://www.akash.ninja/" class="btn-refined btn-primary px-10 py-3.5 rounded-full shadow-lg font-medium tracking-wide flex items-center justify-center gap-2 group">
+                Try Again
+                <span class="material-symbols-rounded text-lg group-hover:rotate-180 transition-transform duration-500">refresh</span>
+            </a>
+            
+            <button onclick="closeTab()" class="btn-refined btn-secondary px-10 py-3.5 rounded-full font-medium tracking-wide flex items-center justify-center gap-2">
+                Close Tab
+                <span class="material-symbols-rounded text-lg text-gray-400">close</span>
+            </button>
+        </div>
+
+        <!-- Visible Game Button -->
+        <button id="open-game" class="btn-game mt-8 px-6 py-2 rounded-full flex items-center gap-2 text-sm font-medium tracking-wide">
+            <span class="material-symbols-rounded text-base">extension</span>
+            Discover Secret
+        </button>
+
+    </main>
+
+    <!-- Simon Game Overlay -->
+    <div id="game-overlay">
+        <div class="absolute top-8 right-8 cursor-pointer p-2 rounded-full hover:bg-gray-100 transition-colors" id="close-game">
+            <span class="material-symbols-rounded text-3xl text-gray-500">close</span>
+        </div>
+
+        <div class="text-center mb-10 space-y-2">
+            <h3 class="serif-font text-5xl text-gray-800">Color Sequence</h3>
+            <p class="text-gray-500 font-light">Watch the pattern, then repeat it.</p>
+        </div>
+
+        <div class="simon-board">
+            <div class="simon-btn simon-blue" data-color="0"></div>
+            <div class="simon-btn simon-red" data-color="1"></div>
+            <div class="simon-btn simon-yellow" data-color="2"></div>
+            <div class="simon-btn simon-green" data-color="3"></div>
+            
+            <div class="game-center">
+                <button id="start-btn" class="text-sm font-bold text-gray-700 hover:text-blue-600 transition-colors tracking-widest uppercase">
+                    Start
+                </button>
+                <div id="score-val" class="text-2xl font-bold text-gray-800 hidden">0</div>
+            </div>
+        </div>
+        
+        <p id="game-msg" class="mt-8 text-gray-400 h-6 text-sm tracking-widest uppercase font-medium"></p>
+    </div>
+
+    <script>
+        /* --- Smooth Eye Tracking --- */
+        const eyeContainer = document.querySelector('.eye-container');
+        const pupil = document.getElementById('pupil');
+        let currentX = 0, currentY = 0, targetX = 0, targetY = 0;
+
+        document.addEventListener('mousemove', (e) => {
+            if (!eyeContainer) return;
+            const rect = eyeContainer.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+            
+            const dx = e.clientX - centerX;
+            const dy = e.clientY - centerY;
+            const angle = Math.atan2(dy, dx);
+            const dist = Math.min(Math.hypot(dx, dy), rect.width / 3.5);
+
+            targetX = Math.cos(angle) * dist;
+            targetY = Math.sin(angle) * dist;
+        });
+
+        function animateEye() {
+            currentX += (targetX - currentX) * 0.1;
+            currentY += (targetY - currentY) * 0.1;
+            if (pupil) pupil.style.transform = `translate(calc(-50% + ${currentX}px), calc(-50% + ${currentY}px))`;
+            requestAnimationFrame(animateEye);
+        }
+        animateEye();
+
+        /* --- Close Tab Logic --- */
+        function closeTab() {
+            // Attempt standard close
+            window.close();
+            
+            // Fallback UX for modern browsers that block script-closing
+            const main = document.querySelector('main');
+            main.style.transition = 'all 0.5s ease';
+            main.style.opacity = '0';
+            main.style.transform = 'scale(0.9)';
+            
+            setTimeout(() => {
+                document.body.innerHTML = '<div style="height:100vh;display:flex;align-items:center;justify-content:center;color:#9ca3af;font-family:sans-serif;">Tab closed. You may close this window.</div>';
+                document.body.style.backgroundColor = '#f3f4f6';
+                document.body.style.backgroundImage = 'none';
+            }, 500);
+        }
+
+        /* --- Simon Game Logic --- */
+        const overlay = document.getElementById('game-overlay');
+        const startBtn = document.getElementById('start-btn');
+        const scoreVal = document.getElementById('score-val');
+        const gameMsg = document.getElementById('game-msg');
+        const buttons = document.querySelectorAll('.simon-btn');
+        
+        let sequence = [];
+        let playerSequence = [];
+        let level = 0;
+        let isPlaying = false;
+
+        document.getElementById('open-game').onclick = () => overlay.classList.add('active');
+        document.getElementById('close-game').onclick = () => {
+            overlay.classList.remove('active');
+            resetGame();
+        };
+
+        startBtn.onclick = () => {
+            if (isPlaying) return;
+            resetGame();
+            isPlaying = true;
+            startBtn.classList.add('hidden');
+            scoreVal.classList.remove('hidden');
+            nextRound();
+        };
+
+        function resetGame() {
+            sequence = [];
+            playerSequence = [];
+            level = 0;
+            isPlaying = false;
+            scoreVal.textContent = '0';
+            gameMsg.textContent = '';
+            startBtn.classList.remove('hidden');
+            scoreVal.classList.add('hidden');
+            startBtn.textContent = "Start";
+        }
+
+        function nextRound() {
+            playerSequence = [];
+            level++;
+            scoreVal.textContent = level;
+            gameMsg.textContent = "Watch carefully...";
+            
+            // Add random color (0-3)
+            sequence.push(Math.floor(Math.random() * 4));
+            
+            // Play sequence
+            let i = 0;
+            const interval = setInterval(() => {
+                flashButton(sequence[i]);
+                i++;
+                if (i >= sequence.length) {
+                    clearInterval(interval);
+                    gameMsg.textContent = "Your turn";
+                }
+            }, 800);
+        }
+
+        function flashButton(index) {
+            const btn = buttons[index];
+            btn.classList.add('active');
+            // Play tone (optional, keeping it visual for simplicity)
+            setTimeout(() => btn.classList.remove('active'), 400);
+        }
+
+        buttons.forEach((btn, index) => {
+            btn.addEventListener('mousedown', () => {
+                if (!isPlaying || gameMsg.textContent === "Watch carefully...") return;
+                
+                flashButton(index);
+                playerSequence.push(index);
+                
+                // Check move
+                if (playerSequence[playerSequence.length - 1] !== sequence[playerSequence.length - 1]) {
+                    gameOver();
+                    return;
+                }
+                
+                // Check sequence completion
+                if (playerSequence.length === sequence.length) {
+                    gameMsg.textContent = "Good!";
+                    setTimeout(nextRound, 1000);
+                }
+            });
+        });
+
+        function gameOver() {
+            isPlaying = false;
+            gameMsg.textContent = "Game Over!";
+            gameMsg.style.color = "#EA4335";
+            setTimeout(() => {
+                resetGame();
+                gameMsg.textContent = "Try again?";
+                gameMsg.style.color = "#9ca3af";
+            }, 2000);
+        }
+    </script>
+</body>
+</html>
