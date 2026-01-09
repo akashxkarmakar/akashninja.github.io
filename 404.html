@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 | Lost in Cyberspace</title>
+    
+    <!-- 1. TAILWIND CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- 2. REACT & BABEL -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <!-- 3. LUCIDE ICONS -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- 4. CONFIGURATION & STYLES -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace'],
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'glitch': 'glitch 1s linear infinite',
+                    },
+                    keyframes: {
+                        glitch: {
+                            '2%, 64%': { transform: 'translate(2px,0) skew(0deg)' },
+                            '4%, 60%': { transform: 'translate(-2px,0) skew(0deg)' },
+                            '62%': { transform: 'translate(0,0) skew(5deg)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Hide scrollbar for Chrome/Safari/Opera */
+        ::-webkit-scrollbar {
+            display: none;
+        }
+        /* Hide scrollbar for IE, Edge and Firefox */
+        .snap-container {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+        }
+
+        /* Hide custom cursor on touch devices to prevent stuck hover states */
+        @media (hover: none) {
+            .custom-cursor { display: none !important; }
+            body { cursor: auto; }
+        }
+        
+        .grid-bg {
+            background-size: 50px 50px;
+            background-image: linear-gradient(#333 1px, transparent 1px), linear-gradient(90deg, #333 1px, transparent 1px);
+        }
+    </style>
+</head>
+<body class="bg-black text-white selection:bg-purple-500 selection:text-white overflow-hidden">
+    
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+
+        /*******************************************************
+         * ICONS
+         *******************************************************/
+        const Icons = {
+            Home: (props) => <svg {...props} width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>,
+            XCircle: (props) => <svg {...props} width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg>,
+            Refresh: (props) => <svg {...props} width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M16 16h5v5"/></svg>,
+            AlertTriangle: (props) => <svg {...props} width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>,
+            ArrowDown: (props) => <svg {...props} width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></svg>
+        };
+
+        /*******************************************************
+         * CUSTOM CURSOR
+         *******************************************************/
+        const CustomCursor = () => {
+            const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+            const [isHovering, setIsHovering] = useState(false);
+
+            useEffect(() => {
+                const updateMousePosition = (ev) => setMousePosition({ x: ev.clientX, y: ev.clientY });
+                const handleMouseOver = (e) => {
+                    if (e.target.tagName === 'A' || e.target.tagName === 'BUTTON' || e.target.closest('.interactive')) {
+                        setIsHovering(true);
+                    } else {
+                        setIsHovering(false);
+                    }
+                };
+                window.addEventListener('mousemove', updateMousePosition);
+                document.addEventListener('mouseover', handleMouseOver);
+                return () => {
+                    window.removeEventListener('mousemove', updateMousePosition);
+                    document.removeEventListener('mouseover', handleMouseOver);
+                };
+            }, []);
+
+            return (
+                <div className="custom-cursor pointer-events-none fixed inset-0 z-50 hidden md:block">
+                    <div 
+                        className="fixed w-3 h-3 bg-white rounded-full mix-blend-difference transition-transform duration-100 ease-out"
+                        style={{ transform: `translate(${mousePosition.x - 6}px, ${mousePosition.y - 6}px) scale(${isHovering ? 0 : 1})` }}
+                    />
+                    <div 
+                        className="fixed w-10 h-10 border border-white rounded-full transition-all duration-300 ease-out"
+                        style={{ 
+                            transform: `translate(${mousePosition.x - 20}px, ${mousePosition.y - 20}px) scale(${isHovering ? 1.5 : 1})`,
+                            backgroundColor: isHovering ? 'rgba(255,255,255,0.1)' : 'transparent',
+                            borderColor: isHovering ? '#a855f7' : 'white'
+                        }}
+                    />
+                </div>
+            );
+        };
+
+        /*******************************************************
+         * TIC TAC TOE ENGINE (MODERATE / BEATABLE)
+         *******************************************************/
+        const TicTacToe = () => {
+            const [board, setBoard] = useState(Array(9).fill(null));
+            const [isPlayerTurn, setIsPlayerTurn] = useState(true);
+            const [winner, setWinner] = useState(null);
+
+            const lines = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6], [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6]];
+
+            const checkWin = (squares) => {
+                for (let i = 0; i < lines.length; i++) {
+                    const [a, b, c] = lines[i];
+                    if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
+                        return squares[a];
+                    }
+                }
+                return squares.includes(null) ? null : 'Draw';
+            };
+
+            const computerMove = (currentBoard) => {
+                const emptyIndices = currentBoard.map((v, i) => v === null ? i : null).filter(v => v !== null);
+                if (emptyIndices.length === 0) return;
+
+                const findMove = (player) => {
+                    for (let i of emptyIndices) {
+                        const tempBoard = [...currentBoard];
+                        tempBoard[i] = player;
+                        if (checkWin(tempBoard) === player) return i;
+                    }
+                    return null;
+                };
+
+                // Moderate Difficulty: 20% chance to just pick random and ignore strategy
+                if (Math.random() < 0.2) {
+                    const randomIdx = emptyIndices[Math.floor(Math.random() * emptyIndices.length)];
+                    makeMove(randomIdx, 'O');
+                    return;
+                }
+
+                // 1. Try to Win (Always take the win)
+                let move = findMove('O');
+                if (move !== null) { makeMove(move, 'O'); return; }
+
+                // 2. Block Player (If missed random check above, block now)
+                move = findMove('X');
+                if (move !== null) { makeMove(move, 'O'); return; }
+
+                // 3. Take Center if available
+                if (currentBoard[4] === null) { makeMove(4, 'O'); return; }
+
+                // 4. Random move
+                const randomIdx = emptyIndices[Math.floor(Math.random() * emptyIndices.length)];
+                makeMove(randomIdx, 'O');
+            };
+
+            const makeMove = (index, player) => {
+                const newBoard = [...board];
+                newBoard[index] = player;
+                setBoard(newBoard);
+                const winState = checkWin(newBoard);
+                if (winState) setWinner(winState);
+                else setIsPlayerTurn(player === 'O');
+            };
+
+            const handleClick = (index) => {
+                if (board[index] || winner || !isPlayerTurn) return;
+                makeMove(index, 'X');
+            };
+
+            useEffect(() => {
+                if (!isPlayerTurn && !winner) {
+                    // Increased delay to 1000ms for a smoother, less aggressive feel
+                    const timeout = setTimeout(() => computerMove(board), 1000); 
+                    return () => clearTimeout(timeout);
+                }
+            }, [isPlayerTurn, winner]);
+
+            const resetGame = () => {
+                setBoard(Array(9).fill(null));
+                setWinner(null);
+                setIsPlayerTurn(true);
+            };
+
+            return (
+                <div className="flex flex-col items-center gap-4 sm:gap-6 p-4 sm:p-6 bg-zinc-900/50 border border-zinc-800 rounded-2xl backdrop-blur-sm w-full mx-auto shadow-2xl relative overflow-hidden group">
+                    <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-blue-600 rounded-2xl blur opacity-20 group-hover:opacity-40 transition duration-500"></div>
+                    
+                    <div className="relative z-10 w-full">
+                        <div className="flex justify-between items-center mb-4">
+                            <h3 className="font-bold text-lg sm:text-xl tracking-wider text-purple-400">TACTICAL AI</h3>
+                            <div className="flex items-center gap-2 text-[10px] sm:text-xs font-mono text-gray-400">
+                                <span className={`w-2 h-2 rounded-full ${isPlayerTurn ? 'bg-green-500 animate-pulse' : 'bg-gray-600'}`}></span>
+                                {winner ? "GAME OVER" : (isPlayerTurn ? "YOUR TURN" : "THINKING...")}
+                            </div>
+                        </div>
+
+                        <div className="grid grid-cols-3 gap-2 mb-4">
+                            {board.map((cell, idx) => (
+                                <button
+                                    key={idx}
+                                    onClick={() => handleClick(idx)}
+                                    className={`
+                                        h-16 w-16 sm:h-20 sm:w-20 rounded-lg text-3xl sm:text-4xl font-black flex items-center justify-center transition-all duration-200 interactive
+                                        ${cell ? 'bg-zinc-800' : 'bg-zinc-900 hover:bg-zinc-800'}
+                                        ${cell === 'X' ? 'text-blue-400 shadow-[0_0_15px_rgba(96,165,250,0.5)]' : ''}
+                                        ${cell === 'O' ? 'text-red-400 shadow-[0_0_15px_rgba(248,113,113,0.5)]' : ''}
+                                        ${!cell && !winner && isPlayerTurn ? 'cursor-pointer' : 'cursor-default'}
+                                    `}
+                                >
+                                    {cell}
+                                </button>
+                            ))}
+                        </div>
+
+                        {winner && (
+                            <div className="text-center animate-bounce mb-4">
+                                <span className={`text-xl sm:text-2xl font-black ${winner === 'X' ? 'text-green-400' : winner === 'O' ? 'text-red-500' : 'text-yellow-400'}`}>
+                                    {winner === 'X' ? "YOU DEFEATED THE SYSTEM!" : winner === 'O' ? "SYSTEM WINS." : "STALEMATE."}
+                                </span>
+                            </div>
+                        )}
+
+                        <button onClick={resetGame} className="w-full py-3 bg-zinc-800 hover:bg-zinc-700 rounded-lg font-mono text-sm flex items-center justify-center gap-2 transition-colors interactive">
+                            <Icons.Refresh size={16} /> REBOOT SYSTEM
+                        </button>
+                    </div>
+                </div>
+            );
+        };
+
+        /*******************************************************
+         * MAIN APP
+         *******************************************************/
+        const App = () => {
+            const [glitchActive, setGlitchActive] = useState(false);
+            const [godMode, setGodMode] = useState(false);
+            const containerRef = useRef(null);
+
+            useEffect(() => {
+                const code = ["ArrowUp","ArrowUp","ArrowDown","ArrowDown","ArrowLeft","ArrowRight","ArrowLeft","ArrowRight","b","a"];
+                let index = 0;
+                const handleKeyDown = (e) => {
+                    if (e.key === code[index]) {
+                        index++;
+                        if (index === code.length) {
+                            setGodMode(true);
+                            alert("GOD MODE ACTIVATED");
+                            index = 0;
+                        }
+                    } else index = 0;
+                };
+                window.addEventListener("keydown", handleKeyDown);
+                return () => window.removeEventListener("keydown", handleKeyDown);
+            }, []);
+
+            const handleClose = () => {
+                window.close();
+                setTimeout(() => alert("Security Protocol: Use browser controls (Ctrl+W) to close this tab."), 100);
+            };
+
+            const scrollToGame = () => {
+                if (containerRef.current) {
+                    containerRef.current.scrollTo({
+                        top: window.innerHeight,
+                        behavior: 'smooth'
+                    });
+                }
+            };
+
+            return (
+                <div className={`transition-colors duration-1000 ${godMode ? 'bg-purple-900' : 'bg-black'}`}>
+                    <CustomCursor />
+                    <div className="absolute inset-0 opacity-20 grid-bg pointer-events-none fixed h-full w-full"></div>
+                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(168,85,247,0.1),rgba(0,0,0,0))] pointer-events-none fixed h-full w-full"></div>
+
+                    {/* Fixed Navbar */}
+                    <nav className="fixed top-0 left-0 w-full z-50 py-6 bg-black/50 backdrop-blur-md border-b border-white/5">
+                        <div className="container mx-auto px-6 flex justify-between items-center">
+                            <a href="https://akash.ninja/" className="text-2xl font-black tracking-tighter text-white uppercase italic hover:text-purple-500 transition-colors">
+                                Akash<span className="text-purple-500">.</span>
+                            </a>
+                            <div className="font-mono text-xs sm:text-sm text-red-500 animate-pulse flex items-center gap-2">
+                                <Icons.AlertTriangle size={16} /> ERROR 404
+                            </div>
+                        </div>
+                    </nav>
+
+                    {/* SCROLL CONTAINER: This div handles the snap scroll */}
+                    <div 
+                        ref={containerRef}
+                        className="snap-container h-screen w-full overflow-y-scroll snap-y snap-mandatory scroll-smooth relative z-10"
+                    >
+                        
+                        {/* Section 1: Error Message (Snap Start) */}
+                        <section className="min-h-screen w-full flex items-center justify-center snap-start relative">
+                            <div className="container mx-auto px-4 sm:px-6 flex flex-col items-center lg:items-start pt-20 max-w-xl lg:max-w-4xl">
+                                <div className="text-center lg:text-left w-full">
+                                    <h1 
+                                        className={`text-[80px] sm:text-[120px] md:text-[180px] font-black leading-none tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-blue-500 select-none ${glitchActive ? 'animate-glitch' : ''}`}
+                                        onMouseEnter={() => setGlitchActive(true)}
+                                        onMouseLeave={() => setGlitchActive(false)}
+                                    >
+                                        404
+                                    </h1>
+                                    <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 sm:mb-6 text-white">
+                                        MISSION FAILED.
+                                    </h2>
+                                    <p className="text-gray-400 text-base sm:text-lg mb-8 font-light max-w-lg mx-auto lg:mx-0">
+                                        You've ventured into the void. The page you're looking for has been moved, deleted, or never existed in this timeline.
+                                    </p>
+                                    
+                                    <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start w-full mb-12">
+                                        <a href="https://akash.ninja/" className="group relative px-8 py-4 bg-white text-black font-black text-center text-lg uppercase tracking-wide overflow-hidden rounded-lg interactive hover:scale-105 transition-transform w-full sm:w-auto">
+                                            <span className="relative z-10 group-hover:text-white transition-colors flex items-center justify-center gap-2">
+                                                <Icons.Home size={20} /> Return to Base
+                                            </span>
+                                            <div className="absolute inset-0 bg-purple-600 transform scale-x-0 origin-left group-hover:scale-x-100 transition-transform duration-300 ease-out"></div>
+                                        </a>
+                                        
+                                        <button onClick={handleClose} className="px-8 py-4 border border-zinc-700 hover:bg-red-500/10 hover:border-red-500/50 text-gray-300 hover:text-red-400 font-bold text-lg uppercase tracking-wide rounded-lg transition-all interactive flex items-center gap-2 justify-center w-full sm:w-auto">
+                                            <Icons.XCircle size={20} /> Abort Mission
+                                        </button>
+                                    </div>
+
+                                    <div 
+                                        onClick={scrollToGame}
+                                        className="animate-bounce cursor-pointer flex flex-col items-center gap-2 text-gray-500 hover:text-purple-400 transition-colors mx-auto lg:mx-0 interactive w-fit"
+                                    >
+                                        <span className="text-xs font-mono uppercase tracking-widest">Challenge The System</span>
+                                        <Icons.ArrowDown size={24} />
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        {/* Section 2: Game (Snap Start) */}
+                        <section id="game-section" className="min-h-screen w-full flex items-center justify-center snap-start bg-black/40 relative">
+                            <div className="container mx-auto px-4 sm:px-6 flex flex-col items-center">
+                                <div className="w-full max-w-sm sm:max-w-md">
+                                    <div className="text-center mb-8">
+                                        <h2 className="text-3xl md:text-5xl font-black mb-2 text-white">SYSTEM BREACH</h2>
+                                        <p className="text-purple-400 font-mono text-sm">Win to escape (Good luck).</p>
+                                    </div>
+                                    <TicTacToe />
+                                    
+                                    <footer className="mt-12 text-center text-zinc-600 text-xs sm:text-sm font-mono relative z-10">
+                                        coordinates: null // status: lost
+                                    </footer>
+                                </div>
+                            </div>
+                        </section>
+
+                    </div>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
