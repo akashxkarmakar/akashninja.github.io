@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Akash Karmakar | Finance & Tech</title>
+    
+    <!-- 1. TAILWIND CSS (Styling) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- 2. REACT & BABEL (Logic) -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <!-- 3. CONFIGURATION & STYLES -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace'],
+                    },
+                    animation: {
+                        'gradient-x': 'gradient-x 3s ease infinite',
+                        'gradient-diagonal': 'gradient-diagonal 6s ease infinite',
+                        'marquee': 'marquee 20s linear infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        'gradient-diagonal': {
+                            '0%, 100%': { backgroundPosition: '0% 50%' },
+                            '50%': { backgroundPosition: '100% 50%' },
+                        },
+                        marquee: {
+                            '0%': { transform: 'translateX(0%)' },
+                            '100%': { transform: 'translateX(-50%)' },
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom Scrollbar Hiding */
+        ::-webkit-scrollbar { display: none; }
+        html { 
+            -ms-overflow-style: none; 
+            scrollbar-width: none; 
+            scroll-snap-type: y proximity;
+        }
+        body { cursor: none; } /* Custom cursor logic handles visibility */
+        
+        /* Mobile optimization */
+        @media (max-width: 768px) {
+            .cursor-follower { display: none !important; }
+            body { cursor: auto; }
+        }
+    </style>
+</head>
+<body class="bg-black text-white selection:bg-purple-500 selection:text-white transition-colors duration-500">
+    
+    <!-- APP ROOT -->
+    <div id="root"></div>
+
+    <!-- MAIN SCRIPT -->
+    <script type="text/babel">
+        
+        /*******************************************************
+         * EDIT YOUR CONTENT HERE (EASY MODE)
+         *******************************************************/
+        const CONTENT = {
+            nav: {
+                logo: "Akash",
+                links: ["Home", "About", "Skills", "Connect"]
+            },
+            hero: {
+                status: "Available for Projects",
+                firstName: "AKASH",
+                lastName: "KARMAKAR", // This has the gradient animation
+                subtitle: "Commerce Student. Finance Innovator. Tech Explorer.",
+                btnPrimary: "Get In Touch",
+                btnSecondary: "Explore Portfolio"
+            },
+            marquee: [
+                "Finance", "Technology", "Innovation", "Strategy", "Analysis", 
+                "Finance", "Technology", "Innovation", "Strategy", "Analysis"
+            ],
+            about: {
+                bioTitle: "BIO",
+                headline: "Not just learning the books. I'm driven by the engines that power our economy.",
+                paragraph1: "As a B.Com Honors student, I explore the intersection where Finance meets Technology.",
+                paragraph2: "My goal is to forge a career in banking with a modern twist. I see a future where AI isn't just a tool, but a core driver of financial innovation.",
+                statsTitle: "Bridging the Digital Gap",
+                stats: [
+                    { label: "Education", val: "B.Com Honors" },
+                    { label: "Focus", val: "Banking & Finance" },
+                    { label: "Vision", val: "AI-Driven Economy" }
+                ]
+            },
+            skills: {
+                title: "My Toolkit",
+                subtitle: "The arsenal I bring to the table.",
+                list: [
+                    { id: "code", title: "Web & AI Savvy", desc: "Digital native. I leverage AI & Code to solve complex financial problems.", color: "purple" },
+                    { id: "cpu", title: "Tech Geek", desc: "Passionate about hardware, software, and the future of computing.", color: "yellow" },
+                    { id: "zap", title: "Rapid Adapter", desc: "I thrive in chaos. New concepts are just opportunities to optimize.", color: "blue" },
+                    { id: "table", title: "Data Master", desc: "Turning raw numbers into visual stories. Excel & Tally are my playground.", color: "green" },
+                    { id: "layout", title: "Office Pro", desc: "Productivity maximizer. Creating presentations that actually land.", color: "red" },
+                    { id: "globe", title: "Multilingual", desc: "Fluent in English, Hindi, and Bengali. Communicating across borders.", color: "pink" }
+                ]
+            },
+            connect: {
+                title: "LET'S CONNECT",
+                email: "hello@akash.ninja",
+                socials: [
+                    { id: "facebook", url: "https://facebook.com/akash.ondhokaar", color: "hover:text-blue-600" },
+                    { id: "instagram", url: "https://instagram.com/akash.ondhokaar", color: "hover:text-pink-600" },
+                    { id: "x", url: "https://x.com/akashkarmakarx", color: "hover:text-gray-500" } // X Logo handled separately
+                ]
+            },
+            footer: {
+                copyright: `© ${new Date().getFullYear()} AKASH KARMAKAR.`,
+                tagline: "DESIGNED FOR THE FUTURE."
+            }
+        };
+
+        /*******************************************************
+         * ICONS (SVG Components)
+         *******************************************************/
+        const Icons = {
+            Moon: (props) => <svg {...props} width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>,
+            Sun: (props) => <svg {...props} width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>,
+            ArrowRight: (props) => <svg {...props} width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>,
+            Mail: (props) => <svg {...props} width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>,
+            Facebook: (props) => <svg {...props} width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>,
+            Instagram: (props) => <svg {...props} width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>,
+            XLogo: (props) => <svg {...props} width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z" /></svg>,
+            Mouse: (props) => <svg {...props} width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 19a6 6 0 0 0-12 0"/><path d="M8 13v6"/><path d="M2 19v-6a6 6 0 0 1 12 0v6"/></svg>, // Generic filler for mouse
+            // Skill Icons
+            Code2: (props) => <svg {...props} width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m18 16 4-4-4-4"/><path d="m6 8-4 4 4 4"/><path d="m14.5 4-5 16"/></svg>,
+            Cpu: (props) => <svg {...props} width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="16" height="16" x="4" y="4" rx="2"/><rect width="6" height="6" x="9" y="9" rx="1"/><path d="M15 2v2"/><path d="M15 20v2"/><path d="M2 15h2"/><path d="M2 9h2"/><path d="M20 15h2"/><path d="M20 9h2"/><path d="M9 2v2"/><path d="M9 20v2"/></svg>,
+            Zap: (props) => <svg {...props} width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>,
+            Table2: (props) => <svg {...props} width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 3H5a2 2 0 0 0-2 2v4h6z"/><path d="M9 9H3v4h6z"/><path d="M3 13v6a2 2 0 0 0 2 2h4v-8z"/><path d="M9 21h6v-8H9z"/><path d="M15 21h4a2 2 0 0 0 2-2v-6h-6z"/><path d="M21 9h-6V3h4a2 2 0 0 1 2 2z"/></svg>,
+            Layout: (props) => <svg {...props} width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><line x1="3" x2="21" y1="9" y2="9"/><line x1="9" x2="9" y1="21" y2="9"/></svg>,
+            Globe2: (props) => <svg {...props} width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21.54 15H17a2 2 0 0 0-2 2v4.54"/><path d="M7 3.34V5a3 3 0 0 0 3 3v0a2 2 0 0 1 2 2v0c0 1.1.9 2 2 2v0a2 2 0 0 0 2-2v0c0-1.1.9-2 2-2h3.17"/><path d="M11 21.95V18a2 2 0 0 0-2-2v0a2 2 0 0 1-2-2v-1a2 2 0 0 0-2-2H2.05"/><circle cx="12" cy="12" r="10"/></svg>
+        };
+
+        const { useState, useEffect, useRef } = React;
+
+        /*******************************************************
+         * HOOKS (Physics & Scroll)
+         *******************************************************/
+        
+        // Physics-based Scroll Position for "Floating" Parallax
+        const useLerpedScrollPosition = () => {
+            const [scrollPos, setScrollPos] = useState(0);
+            const [lerpedScroll, setLerpedScroll] = useState(0);
+
+            useEffect(() => {
+                const handleScroll = () => setScrollPos(window.scrollY);
+                window.addEventListener('scroll', handleScroll);
+                return () => window.removeEventListener('scroll', handleScroll);
+            }, []);
+
+            useEffect(() => {
+                let animationFrameId;
+                const lerp = (start, end, factor) => start + (end - start) * factor;
+                const animate = () => {
+                setLerpedScroll(prev => {
+                    const diff = Math.abs(scrollPos - prev);
+                    if (diff < 0.1) return prev; 
+                    return lerp(prev, scrollPos, 0.05); 
+                });
+                animationFrameId = requestAnimationFrame(animate);
+                };
+                animate();
+                return () => cancelAnimationFrame(animationFrameId);
+            }, [scrollPos]);
+
+            return lerpedScroll;
+        };
+
+        // Physics-based Mouse Position
+        const useLerpedMousePosition = () => {
+            const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+            const [lerpedPosition, setLerpedPosition] = useState({ x: 0, y: 0 });
+            
+            useEffect(() => {
+                const updateMousePosition = (ev) => setMousePosition({ x: ev.clientX, y: ev.clientY });
+                window.addEventListener('mousemove', updateMousePosition);
+                return () => window.removeEventListener('mousemove', updateMousePosition);
+            }, []);
+
+            useEffect(() => {
+                let animationFrameId;
+                const lerp = (start, end, factor) => start + (end - start) * factor;
+                const animate = () => {
+                    setLerpedPosition(prev => ({
+                        x: lerp(prev.x, mousePosition.x, 0.04),
+                        y: lerp(prev.y, mousePosition.y, 0.04)
+                    }));
+                    animationFrameId = requestAnimationFrame(animate);
+                };
+                animate();
+                return () => cancelAnimationFrame(animationFrameId);
+            }, [mousePosition]);
+
+            return { immediate: mousePosition, delayed: lerpedPosition };
+        };
+
+        // Native Smooth Scroll Helper
+        const nativeSmoothScroll = (e, targetId) => {
+            e.preventDefault();
+            const target = document.getElementById(targetId);
+            if (target) {
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        };
+
+        /*******************************************************
+         * COMPONENTS
+         *******************************************************/
+
+        const CustomCursor = ({ isDark }) => {
+            const { immediate, delayed } = useLerpedMousePosition();
+            const [isHovering, setIsHovering] = useState(false);
+
+            useEffect(() => {
+                const handleMouseOver = (e) => {
+                    if (e.target.tagName === 'A' || e.target.tagName === 'BUTTON' || e.target.closest('.interactive')) {
+                        setIsHovering(true);
+                    } else {
+                        setIsHovering(false);
+                    }
+                };
+                document.addEventListener('mouseover', handleMouseOver);
+                return () => document.removeEventListener('mouseover', handleMouseOver);
+            }, []);
+
+            return (
+                <div className="cursor-follower">
+                    <div 
+                        className={`fixed top-0 left-0 w-3 h-3 rounded-full pointer-events-none z-[60] mix-blend-difference transition-transform duration-100 ease-out hidden md:block ${isDark ? 'bg-white' : 'bg-black'}`}
+                        style={{ transform: `translate(${immediate.x - 6}px, ${immediate.y - 6}px) scale(${isHovering ? 0 : 1})` }}
+                    />
+                    <div 
+                        className={`fixed top-0 left-0 w-10 h-10 border-2 rounded-full pointer-events-none z-50 transition-all duration-300 ease-out hidden md:block ${isDark ? 'border-white' : 'border-black'}`}
+                        style={{ 
+                            transform: `translate(${delayed.x - 20}px, ${delayed.y - 20}px) scale(${isHovering ? 1.5 : 1})`,
+                            opacity: isHovering ? 1 : 0.5,
+                            borderWidth: isHovering ? '2px' : '1px',
+                            backgroundColor: isHovering ? (isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)') : 'transparent'
+                        }}
+                    />
+                </div>
+            );
+        };
+
+        const Navbar = ({ isDark, toggleTheme }) => {
+            const [isScrolled, setIsScrolled] = useState(false);
+            useEffect(() => {
+                const handleScroll = () => setIsScrolled(window.scrollY > 50);
+                window.addEventListener('scroll', handleScroll);
+                return () => window.removeEventListener('scroll', handleScroll);
+            }, []);
+
+            return (
+                <nav className={`fixed top-0 left-0 w-full z-40 transition-all duration-300 ${isScrolled ? (isDark ? 'py-4 bg-black/80 border-white/10' : 'py-4 bg-white/80 border-black/10') + ' backdrop-blur-md border-b' : 'py-8 bg-transparent'}`}>
+                    <div className="container mx-auto px-6 flex justify-between items-center">
+                        <a href="#" className={`text-2xl font-black tracking-tighter hover:text-purple-500 transition-colors uppercase italic interactive ${isDark ? 'text-white' : 'text-black'}`}>
+                            {CONTENT.nav.logo}<span className="text-purple-500">.</span>
+                        </a>
+                        <div className="hidden md:flex space-x-8">
+                            {CONTENT.nav.links.map((item) => (
+                                <a 
+                                    key={item} 
+                                    href={`#${item.toLowerCase()}`} 
+                                    onClick={(e) => nativeSmoothScroll(e, item.toLowerCase())}
+                                    className={`text-sm font-bold uppercase tracking-widest hover:underline decoration-purple-500 decoration-2 underline-offset-4 transition-all interactive ${isDark ? 'text-gray-400 hover:text-white' : 'text-gray-600 hover:text-black'}`}
+                                >
+                                    {item}
+                                </a>
+                            ))}
+                        </div>
+                        <button 
+                            onClick={toggleTheme}
+                            className={`w-16 h-8 rounded-full p-1 relative transition-colors duration-300 interactive flex items-center ${isDark ? 'bg-zinc-800' : 'bg-zinc-200'}`}
+                        >
+                            <div className={`w-6 h-6 rounded-full bg-white shadow-md transform transition-transform duration-300 flex items-center justify-center ${isDark ? 'translate-x-8' : 'translate-x-0'}`}>
+                                {isDark ? <Icons.Moon size={14} className="text-black" /> : <Icons.Sun size={14} className="text-orange-500" />}
+                            </div>
+                        </button>
+                    </div>
+                </nav>
+            );
+        };
+
+        const Hero = ({ isDark }) => {
+            const [scrollY, setScrollY] = useState(0);
+            useEffect(() => {
+                const hS = () => setScrollY(window.scrollY);
+                window.addEventListener('scroll', hS);
+                return () => window.removeEventListener('scroll', hS);
+            }, []);
+            
+            return (
+                <section id="home" className={`relative min-h-screen flex items-center justify-center overflow-hidden pt-20 snap-start ${isDark ? 'bg-black text-white' : 'bg-white text-black'}`}>
+                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(168,85,247,0.15),rgba(0,0,0,0))]"></div>
+                    <div className="absolute inset-0 opacity-20" style={{ backgroundImage: `linear-gradient(${isDark ? '#333' : '#ddd'} 1px, transparent 1px), linear-gradient(90deg, ${isDark ? '#333' : '#ddd'} 1px, transparent 1px)`, backgroundSize: '50px 50px' }}></div>
+                    
+                    {/* Floating Orbs */}
+                    <div className="absolute top-1/4 left-10 w-32 h-32 bg-purple-600 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-pulse" style={{ transform: `translateY(${scrollY * 0.5}px)` }} />
+                    <div className="absolute bottom-1/4 right-10 w-48 h-48 bg-blue-600 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-pulse delay-700" style={{ transform: `translateY(${scrollY * -0.2}px)` }} />
+
+                    <div className="container mx-auto px-6 relative z-10 text-center">
+                        <div className={`inline-block mb-4 px-4 py-1 rounded-full border backdrop-blur-sm ${isDark ? 'border-purple-500/50 bg-purple-500/10' : 'border-purple-500/30 bg-purple-100'}`}>
+                            <span className="text-purple-500 font-mono text-xs tracking-widest uppercase">● {CONTENT.hero.status}</span>
+                        </div>
+                        
+                        <h1 className="text-6xl md:text-8xl lg:text-9xl font-black tracking-tighter leading-none mb-6">
+                            {CONTENT.hero.firstName}<br />
+                            <span className="text-transparent bg-clip-text bg-[length:300%_300%] bg-gradient-to-br from-purple-500 via-pink-500 to-blue-500 animate-gradient-diagonal">
+                                {CONTENT.hero.lastName}
+                            </span>
+                        </h1>
+                        
+                        <p className={`text-xl md:text-2xl max-w-2xl mx-auto mb-10 font-light ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+                            {CONTENT.hero.subtitle}
+                        </p>
+                        
+                        <div className="flex flex-col md:flex-row gap-4 justify-center items-center">
+                            <a href="#connect" onClick={(e) => nativeSmoothScroll(e, 'connect')} className={`group relative px-8 py-4 font-black text-lg uppercase tracking-wide overflow-hidden rounded-lg interactive ${isDark ? 'bg-white text-black' : 'bg-black text-white'}`}>
+                                <span className="relative z-10 transition-colors">{CONTENT.hero.btnPrimary}</span>
+                                <div className="absolute inset-0 bg-purple-600 transform scale-x-0 origin-left group-hover:scale-x-100 transition-transform duration-300 ease-out"></div>
+                            </a>
+                            <a href="#about" onClick={(e) => nativeSmoothScroll(e, 'about')} className={`px-8 py-4 border font-bold text-lg uppercase tracking-wide rounded-lg transition-all interactive ${isDark ? 'border-white/20 hover:bg-white/10 text-white' : 'border-black/20 hover:bg-black/5 text-black'}`}>
+                                {CONTENT.hero.btnSecondary}
+                            </a>
+                        </div>
+                    </div>
+                </section>
+            );
+        };
+
+        const Marquee = ({ isDark }) => (
+            <div className="bg-purple-600 py-3 overflow-hidden transform -rotate-1 relative z-20">
+                <div className={`whitespace-nowrap animate-marquee flex gap-8 font-black text-xl uppercase tracking-widest ${isDark ? 'text-black' : 'text-white'}`}>
+                    {CONTENT.marquee.map((text, i) => (
+                        <React.Fragment key={i}>
+                            <span>{text}</span>
+                            <span>•</span>
+                        </React.Fragment>
+                    ))}
+                </div>
+            </div>
+        );
+
+        const About = ({ isDark }) => {
+            const lerpedScroll = useLerpedScrollPosition();
+            // Parallax applied ONLY to the "BIO" text. 0.04 factor.
+            // Starts at -20 top.
+            const bioHeadingParallax = { transform: `translateY(${lerpedScroll * 0.04}px)` };
+
+            return (
+                <section id="about" className={`py-32 min-h-screen flex items-center relative overflow-hidden snap-start ${isDark ? 'bg-zinc-950 text-white' : 'bg-zinc-100 text-black'}`}>
+                    <div className="container mx-auto px-6 grid md:grid-cols-2 gap-16 items-center">
+                        <div className="relative perspective-1000">
+                            <div className="absolute -inset-4 bg-gradient-to-r from-purple-600 to-blue-600 rounded-2xl blur-lg opacity-30"></div>
+                            <div className={`relative border p-8 rounded-2xl shadow-2xl transition-transform duration-200 active:scale-95 cursor-pointer ${isDark ? 'bg-zinc-900 border-zinc-800' : 'bg-white border-zinc-200'}`}>
+                                <h3 style={bioHeadingParallax} className={`text-7xl font-black absolute -top-20 -left-10 select-none will-change-transform ${isDark ? 'text-zinc-800' : 'text-zinc-200'}`}>
+                                    {CONTENT.about.bioTitle}
+                                </h3>
+                                <p className="text-2xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-purple-500 to-blue-500">
+                                    {CONTENT.about.headline}
+                                </p>
+                                <p className={`leading-relaxed text-lg mb-6 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+                                    {CONTENT.about.paragraph1}
+                                </p>
+                                <p className={`leading-relaxed ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+                                    {CONTENT.about.paragraph2}
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div className="space-y-8 z-10">
+                            <div> 
+                                <h2 className="text-5xl md:text-6xl font-black uppercase tracking-tighter leading-none">
+                                    {CONTENT.about.statsTitle.split(" ")[0]} <br/>
+                                    <span className="text-purple-500">{CONTENT.about.statsTitle.split(" ").slice(1).join(" ")}</span>
+                                </h2>
+                                <div className="flex flex-col gap-6 mt-8">
+                                    {CONTENT.about.stats.map((stat, idx) => (
+                                        <div key={idx} className={`flex items-center gap-4 border-b pb-4 group interactive ${isDark ? 'border-zinc-800' : 'border-zinc-300'}`}>
+                                            <div className={`w-12 h-12 rounded-full flex items-center justify-center group-hover:bg-purple-600 transition-colors ${isDark ? 'bg-zinc-900' : 'bg-zinc-200'}`}>
+                                                <Icons.ArrowRight className={`w-5 h-5 ${isDark ? 'text-white' : 'text-black group-hover:text-white'}`} />
+                                            </div>
+                                            <div>
+                                                <p className={`text-sm uppercase tracking-wider ${isDark ? 'text-gray-500' : 'text-gray-500'}`}>{stat.label}</p>
+                                                <p className="text-xl font-bold">{stat.val}</p>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            );
+        };
+
+        const SkillCard = ({ iconName, title, desc, color, isDark }) => {
+            const Icon = Icons[iconName] || Icons.Code2;
+            const ref = useRef(null);
+            const [rotation, setRotation] = useState({ x: 0, y: 0 });
+            const [clicked, setClicked] = useState(false);
+
+            const handleMouseMove = (e) => {
+                if (!ref.current) return;
+                const rect = ref.current.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                const xPct = x / rect.width;
+                const yPct = y / rect.height;
+                setRotation({ x: (0.5 - yPct) * 20, y: (xPct - 0.5) * 20 });
+            };
+            
+            const handleClick = () => {
+                setClicked(true);
+                setTimeout(() => setClicked(false), 500);
+            };
+
+            return (
+                <div 
+                    ref={ref}
+                    onMouseMove={handleMouseMove} 
+                    onMouseLeave={() => setRotation({ x: 0, y: 0 })}
+                    className="transition-transform duration-100 ease-linear h-full"
+                    style={{ transform: `perspective(1000px) rotateX(${rotation.x}deg) rotateY(${rotation.y}deg)`, transformStyle: 'preserve-3d' }}
+                >
+                    <div className={`h-full border p-8 rounded-2xl transition-all duration-300 group relative overflow-hidden ${isDark ? 'bg-zinc-900/50 border-zinc-800 hover:border-purple-500' : 'bg-white border-zinc-200 hover:border-purple-500 shadow-lg'}`}>
+                        <div 
+                            className="relative w-20 h-20 flex items-center justify-center group cursor-pointer interactive mb-6"
+                            onClick={handleClick}
+                        >
+                            <svg viewBox="0 0 100 100" className={`absolute inset-0 w-full h-full transition-all duration-300 ${clicked ? `drop-shadow-[0_0_20px_rgba(168,85,247,0.8)] scale-110` : `drop-shadow-[0_0_10px_rgba(168,85,247,0.5)]`}`}>
+                                <path d="M50 0 L93.3 25 V75 L50 100 L6.7 75 V25 Z" fill="none" stroke="currentColor" strokeWidth="2" className={`text-${color}-500 transition-all duration-300 group-hover:fill-${color}-500/20 ${clicked ? `fill-${color}-500/40` : ''}`} />
+                            </svg>
+                            <Icon className={`w-8 h-8 relative z-10 transition-transform duration-300 group-hover:scale-110 text-${color}-500`} />
+                        </div>
+                        <h3 className={`text-2xl font-bold mb-3 relative z-10 ${isDark ? 'text-white' : 'text-black'}`}>{title}</h3>
+                        <p className={`relative z-10 transition-colors ${isDark ? 'text-gray-400 group-hover:text-gray-200' : 'text-gray-600 group-hover:text-gray-800'}`}>{desc}</p>
+                    </div>
+                </div>
+            );
+        };
+
+        const Skills = ({ isDark }) => (
+            <section id="skills" className={`py-32 min-h-screen flex items-center relative overflow-hidden snap-start ${isDark ? 'bg-black text-white' : 'bg-zinc-50 text-black'}`}>
+                <div className="absolute inset-0" style={{ backgroundImage: `radial-gradient(${isDark ? '#333' : '#cbd5e1'} 1px, transparent 1px)`, backgroundSize: '30px 30px', opacity: 0.3 }}></div>
+                <div className="container mx-auto px-6 relative z-10">
+                    <div className="text-center mb-20">
+                        <h2 className="text-5xl md:text-7xl font-black uppercase mb-4 tracking-tighter">
+                            {CONTENT.skills.title.split(" ")[0]} <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-blue-500">{CONTENT.skills.title.split(" ")[1]}</span>
+                        </h2>
+                        <p className={`text-xl max-w-2xl mx-auto ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>{CONTENT.skills.subtitle}</p>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {CONTENT.skills.list.map((skill, idx) => {
+                            // Map icon IDs to component names roughly
+                            const iconMap = { code: "Code2", cpu: "Cpu", zap: "Zap", table: "Table2", layout: "Layout", globe: "Globe2" };
+                            return <SkillCard key={idx} iconName={iconMap[skill.id]} {...skill} isDark={isDark} />;
+                        })}
+                    </div>
+                </div>
+            </section>
+        );
+
+        const Connect = ({ isDark }) => (
+            <section id="connect" className={`py-32 min-h-screen flex items-center justify-center relative snap-start ${isDark ? 'bg-zinc-950 text-white' : 'bg-white text-black'}`}>
+                <div className="container mx-auto px-6 text-center">
+                    <h2 className="text-6xl md:text-8xl font-black mb-10 tracking-tighter hover:tracking-wide transition-all duration-500">
+                        {CONTENT.connect.title.split(" ")[0]} <span className="text-purple-600">{CONTENT.connect.title.split(" ")[1]}</span>
+                    </h2>
+                    <div className="flex justify-center gap-8 mb-16">
+                        {CONTENT.connect.socials.map((social, idx) => {
+                            const SocialIcon = Icons[social.id.charAt(0).toUpperCase() + social.id.slice(1)] || Icons.Facebook;
+                            const IconComp = social.id === 'x' ? Icons.XLogo : SocialIcon;
+                            return (
+                                <a key={idx} href={social.url} target="_blank" rel="noreferrer" className={`p-6 rounded-full transition-all hover:scale-110 hover:-translate-y-2 border interactive ${social.color} ${isDark ? 'bg-zinc-900 border-zinc-800' : 'bg-zinc-100 border-zinc-200'}`}>
+                                    <IconComp className="w-8 h-8" />
+                                </a>
+                            );
+                        })}
+                    </div>
+                    <a href={`mailto:${CONTENT.connect.email}`} className={`inline-flex items-center gap-3 px-10 py-5 rounded-full font-black text-xl hover:bg-purple-500 hover:text-white transition-all transform hover:scale-105 shadow-lg shadow-purple-500/25 interactive ${isDark ? 'bg-white text-black' : 'bg-black text-white'}`}>
+                        <Icons.Mail className="w-6 h-6" />
+                        {CONTENT.connect.email}
+                    </a>
+                </div>
+            </section>
+        );
+
+        const Footer = ({ isDark }) => (
+            <footer className={`py-8 border-t snap-start ${isDark ? 'bg-black text-zinc-500 border-zinc-900' : 'bg-zinc-100 text-zinc-400 border-zinc-200'}`}>
+                <div className="container mx-auto px-6 text-center flex flex-col md:flex-row justify-between items-center">
+                    <p className="font-mono text-sm">{CONTENT.footer.copyright}</p>
+                    <p className="font-mono text-sm mt-2 md:mt-0">{CONTENT.footer.tagline}</p>
+                </div>
+            </footer>
+        );
+
+        const App = () => {
+            const [isDark, setIsDark] = useState(true);
+            const toggleTheme = () => setIsDark(!isDark);
+
+            return (
+                <div className={`min-h-screen transition-colors duration-500 ${isDark ? 'bg-black' : 'bg-white'}`}>
+                    <CustomCursor isDark={isDark} />
+                    <Navbar isDark={isDark} toggleTheme={toggleTheme} />
+                    <div className="w-full">
+                        <Hero isDark={isDark} />
+                        <Marquee isDark={isDark} />
+                        <About isDark={isDark} />
+                        <Skills isDark={isDark} />
+                        <Connect isDark={isDark} />
+                        <Footer isDark={isDark} />
+                    </div>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
